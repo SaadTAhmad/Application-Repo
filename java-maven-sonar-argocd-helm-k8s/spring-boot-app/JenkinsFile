@@ -54,7 +54,7 @@ pipeline {
         steps {
             withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
                 // Make sure workspace permissions are correct
-                sh "chown -R $(id -u):$(id -g) ${WORKSPACE}"
+                sh 'chown -R $(id -u):$(id -g) ${WORKSPACE}'
 
                 // Run all Git commands from the workspace
                 dir("${WORKSPACE}") {

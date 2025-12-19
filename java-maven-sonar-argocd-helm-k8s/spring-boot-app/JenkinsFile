@@ -20,7 +20,7 @@ options {
     stage('Checkout') {
       steps {
         checkout scm    
-        sh 'echo passed'
+        //sh 'echo passed' stopped working
         //git branch: 'main', url: 'https://github.com/SaadTAhmad/Application-Repo.git'
       }
     }

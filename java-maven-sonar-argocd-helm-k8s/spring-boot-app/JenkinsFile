@@ -6,12 +6,6 @@ pipeline {
     }
   }
   stages {
-    stage('Clean Workspace') {
-        steps {
-            sh 'sudo rm -rf java-maven-sonar-argocd-helm-k8s/spring-boot-app/target || true'
-            cleanWs()
-        }
-    }
     stage('Checkout') {
       steps {   
         sh 'echo passed'

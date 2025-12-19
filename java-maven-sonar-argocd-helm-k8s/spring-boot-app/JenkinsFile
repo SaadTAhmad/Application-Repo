@@ -53,20 +53,21 @@ pipeline {
         }
         steps {
             withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
-              script {
-           sh "chown -R $(id -u):$(id -g) ${WORKSPACE}"
-                sh '''
-                    cd ${WORKSPACE}
-                    ls -la
-                    git config user.email "Saad21703@hotmail.com"
-                    git config user.name "Saad Ahmad"
-                    BUILD_NUMBER=${BUILD_NUMBER}
-                    sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
-                    git add java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
-                    git commit -m "Update deployment image to version ${BUILD_NUMBER}"
-                    git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
-                '''
-            }
+             script {
+                // Make sure workspace permissions are correct
+                sh "chown -R $(id -u):$(id -g) ${WORKSPACE}"
+
+                // Run all Git commands from the workspace
+                dir("${WORKSPACE}") {
+                    sh '''
+                        git config user.email "Saad21703@hotmail.com"
+                        git config user.name "Saad Ahmad"
+                        sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
+                        git add java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
+                        git commit -m "Update deployment image to version ${BUILD_NUMBER}" || echo "No changes to commit"
+                        git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                    '''
+                }
           }
         }
     }

@@ -5,22 +5,10 @@ pipeline {
       args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
     }
   }
-
-options {
-    skipDefaultCheckout()
-}
-
-
   stages {
-    stage('Clean Workspace') {
-        steps {
-            cleanWs()
-        }
-    }
     stage('Checkout') {
-      steps {
-        checkout scm    
-        //sh 'echo passed' stopped working
+      steps {   
+        sh 'echo passed'
         //git branch: 'main', url: 'https://github.com/SaadTAhmad/Application-Repo.git'
       }
     }
@@ -28,9 +16,7 @@ options {
       steps {
         sh 'ls -ltr'
         // build the project and create a JAR file
-        sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app'
-        sh 'ls -ltr'
-        sh 'mvn clean package'
+        sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && mvn clean package'
       }
     }
     stage('Static Code Analysis') {
